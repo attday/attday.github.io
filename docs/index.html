@@ -50,10 +50,27 @@ int main()
 </code>
 </pre>
 
-<div style="margin:auto;width:400px">
-<svg width="320" height="240">
+<div style="margin:auto;width:330px">
+<svg width="320px" height="240">
 <circle r="100" cx="160" cy="120" fill="#3a7" />
 </svg>
+</div>
+
+<div style="margin:auto;width:330px">
+<canvas id="canvas01" width="320px" height="200" style="border:2px solid #ddd">
+</canvas>
+
+<script>
+var cvs = document.getElementById("canvas01");
+var ctx = cvs.getContext("2d");
+ctx.beginPath();
+ctx.arc(160, 100, 90, 0, 2*Math.PI);
+ctx.fillStyle = "#7a3";
+ctx.strokeStyle = "#7a3";
+ctx.fill();
+ctx.stroke();
+</script>
+
 </div>
 
 </main>
