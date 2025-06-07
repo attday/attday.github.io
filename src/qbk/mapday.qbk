@@ -1,0 +1,43 @@
+[book c++ Programming Day, Mapday
+	[id mapday]
+	[quickbook 1.7]
+	[license
+		Distributed under the Boost Software License, Version 1.0.
+		(See accompanying file LICENSE_1_0.txt or copy at
+		[@http://www.boost.org/LICENSE_1_0.txt])
+	]
+]
+
+[include cppday/cppday.qbk]
+
+c++ is the most popular programming language in the world.
+
+The c++ programming language.
+
+```
+#include <iostream>
+#include <string>
+
+int main()
+{
+	std::string str = "Hello, c++!";
+	std::cout << str << std::endl;
+}
+```
+
+[///////////////////////////////////////////////////////////////////////////]
+[link cpp-lexer-bone-frame c++ lexer boost lex minimized bone frame] [br]
+[link word-counter-boost-lex A word counter, boost lex c++ lexer] [br]
+[link cpp-lexer-intro boost lex: c++ lexical analyzers (c++ lexer), introduce] [br]
+[link boost-lex boost lex, c++ lexer] [br]
+[///////////////////////////////////////////////////////////////////////////]
+[link cpp-lorenz-system c++ Lorenz System (Attractor), boost odeint] [br]
+[link cpp-boost-odeint-ode c++ boost odeint ODE] [br]
+[link cpp-odeint-intro boost odeint: c++ Differential Equation, introduce] [br]
+[link boost-odeint boost odeint, c++ Differential Equation] [br]
+[///////////////////////////////////////////////////////////////////////////]
+[link boost-signals2-pattern-cpp boost::signals2 pattern, c++] [br]
+[link cpp-boost-signals2 c++ boost signals2, introduce] [br]
+[link boost-signals2 boost signals2, c++ signal/slot] [br]
+
+[include ./share/foot.inc.qbk]

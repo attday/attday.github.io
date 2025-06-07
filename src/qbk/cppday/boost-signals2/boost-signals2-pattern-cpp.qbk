@@ -1,0 +1,134 @@
+[article boost::signals2 pattern, c++
+	[id boost-signals2-pattern-cpp]
+	[quickbook 1.7]
+]
+
+boost::signals2 c++, c++ signal/slot pattern.
+
+[*Namespace]
+
+namespace alias
+
+```
+namespace sig = boost::signals2;
+```
+
+[*Signal Type]
+
+The signal type of boost::signals2
+
+```
+using signal_type = sig::signal<return_type(param_type)>;
+```
+
+[*Slot Type]
+
+The slot type of boost::signals2
+
+```
+using slot_type = signal_type::slot_type;
+```
+
+[*Connection Type]
+
+The connection type of signal/slot.
+
+```
+using connection_type = boost::signals2::connection;
+```
+
+[h1:cpp-example [role cyan c++ example]]
+
+[!c++]
+```
+#include <boost/signals2.hpp>
+#include <iostream>
+#include <functional>
+
+namespace sig = boost::signals2;
+
+namespace nsd
+{
+	using signal_type = sig::signal<int(int)>;
+	using slot_type = nsd::signal_type::slot_type;
+	using connection_type = sig::connection;
+	using std::placeholders::_1;
+	using std::placeholders::_2;
+	using std::placeholders::_3;
+}
+
+namespace nsd
+{
+	class event
+	{
+	private:
+		nsd::signal_type __signal;
+	public:
+		nsd::connection_type connect(int prior__, const nsd::slot_type & slot__)
+		{
+			return __signal.connect(prior__, slot__);
+		}
+		void update(int value)
+		{
+			auto result = __signal(value);
+			if (result)
+				std::cout << "result: " << *result << std::endl;
+			else
+				std::cout << "no result" << std::endl;
+		}
+	};
+
+	class viewer
+	{
+	private:
+		int __prior;
+		nsd::connection_type __connection;
+	public:
+		viewer(int prior__, nsd::event & event__):
+			__prior{prior__},
+			__connection{
+				event__.connect(
+					__prior,
+					std::bind(
+						&nsd::viewer::upgrade,
+						this,
+						_1
+					)
+				)
+			}
+		{
+		}
+	public:
+		virtual ~viewer()
+		{
+			__connection.disconnect();
+		}
+	public:
+		int upgrade(int value__)
+		{
+			int x = value__ * value__ * value__;
+			std::cout << __prior << " : " << x << std::endl;
+			return x;
+		}
+	};
+}
+
+int main()
+{
+	nsd::event event;
+	nsd::viewer v1{10, event};
+	nsd::viewer v2{20, event};
+	event.update(5);
+	event.update(7);
+}
+```
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 06:34:55 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-signals2 Up]
+
+[include ../../share/foot.inc.qbk]

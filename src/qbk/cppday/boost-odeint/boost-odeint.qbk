@@ -1,0 +1,14 @@
+[article boost odeint, c++ Differential Equation
+	[id boost-odeint]
+	[quickbook 1.7]
+]
+
+[include cpp-odeint-intro.qbk]
+[include cpp-boost-odeint-ode.qbk]
+[include cpp-lorenz-system.qbk]
+
+[h1:back [role cyan Back]]
+
+[link cppday Up]
+
+[include ../../share/foot.inc.qbk]

@@ -1,0 +1,13 @@
+[article boost signals2, c++ signal/slot
+	[id boost-signals2]
+	[quickbook 1.7]
+]
+
+[include cpp-boost-signals2-intro.qbk]
+[include boost-signals2-pattern-cpp.qbk]
+
+[h1:back [role cyan Back]]
+
+[link cppday Up]
+
+[include ../../share/foot.inc.qbk]

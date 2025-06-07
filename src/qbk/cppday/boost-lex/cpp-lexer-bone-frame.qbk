@@ -1,0 +1,141 @@
+[article c++ lexer boost lex minimized bone frame
+	[id cpp-lexer-bone-frame]
+	[quickbook 1.7]
+]
+
+This article introduces a minimized bone frame of boost lex program, the c++ lexer.
+
+[*Namespace]
+
+To make programming less verbose, make a namespace alias. Namespace alias keeps the meme and makes it less verbose at the same time.
+
+```
+namespace lex = boost::spirit::lex;
+```
+
+[*Tokenize]
+
+The most important of boost lex is to tokenize input data, which can be did by a simplified helper: lex::tokenize.
+
+lex::tokenize(...) is a helper function simplifying the usage of a lexer in a standalone fashion.
+
+```
+bool lex::tokenize(
+	the_iterator & first, the iterator last, const the_lexer & lexer,
+	the_call_back_fn fn,
+	const the_lexer::the_char_type * init_state = 0
+);
+bool lex::tokenize(
+	the_iterator & first, the iterator last, const the_lexer & lexer,
+	const the_lexer::the_char_type * init_state = 0
+);
+```
+
+Commonly, the calling is:
+
+```
+bool r = lex::tokenize(first, last, lexer, fn);
+```
+
+First is the non-const Lvalue iterator reference to the first of the string.
+
+Last is the iterator to the last of the string.
+
+[*Define a lexer]
+
+```
+template <typename type_t00>
+class my_lexer: virtual public lex::lexer<type_t00>
+{
+public:
+	my_lexer()
+	{
+		// First param is the regular expression of a token pattern
+		//		in the to be parsed string.
+		// Second param is the token id.
+		this->self.add(".", 0);
+	}
+};
+
+my_lexer<lex::lexertl::lexer> a_lexer;
+```
+
+No token or empty token could cause runtime error, tokens are required to be added:
+
+```
+this->self.add(".", 0);	// token regular expression pattern, token id
+```
+
+[*Define fn]:
+
+```
+class my_fn
+{
+public:
+	template <typename token_t__>
+	bool operator()(const token_t__ & token__) const
+	{
+		return true;
+	}
+};
+```
+
+[h1:cpp-example [role cyan c++ example]]
+
+Minimized boost lex bare frame (c++ lexer).
+
+[!c++]
+```
+#include <boost/spirit/include/lex_lexertl.hpp>
+#include <string>
+#include <iostream>
+
+namespace lex = boost::spirit::lex;
+
+namespace nsp
+{
+	template <typename lexer_t00>
+	class my_lexer: virtual public lex::lexer<lexer_t00>
+	{
+	public:
+		my_lexer()
+		{
+			this->self.add(".", 0);
+		}
+	};
+
+	class my_fn
+	{
+	public:
+		template <typename token_t10>
+		bool operator()(const token_t10 & token__) const
+		{
+			return true;
+		}
+	};
+}
+
+int main()
+{
+	std::string str = "Hello, c++!";
+	const char * first = &*str.begin();
+	const char * last = &*str.end();
+
+	nsp::my_lexer<lex::lexertl::lexer<>> lexer;
+	nsp::my_fn fn;
+
+	bool r = lex::tokenize(first, last, lexer, fn);
+
+	std::cout << std::boolalpha << r << std::endl;
+}
+```
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 01:27:12 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-lex Up]
+
+[include ../../share/foot.inc.qbk]

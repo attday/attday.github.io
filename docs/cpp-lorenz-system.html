@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>c++ Lorenz System (Attractor), boost odeint</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
+<link rel="home" href="index.html" title="c++ Programming Day, Mapday">
+<link rel="up" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">
+<link rel="prev" href="cpp-boost-odeint-ode.html" title="c++ boost odeint ODE">
+<link rel="next" href="boost-signals2.html" title="boost signals2, c++ signal/slot">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-boost-odeint-ode.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-odeint.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="boost-signals2.html"><img src="images/next.png" alt="Next"></a>
+</div>
+<div class="article">
+<div class="titlepage">
+<div><div><h2 class="title">
+<a name="cpp-lorenz-system"></a>c++ Lorenz System (Attractor), boost odeint</h2></div></div>
+<hr>
+</div>
+<p>
+          Lorenz System (Attractor) is a system of Ordinary Differential Equations,
+          that a group of special parameters are applied to.
+        </p>
+<p>
+          odeint is a boost c++ library that can solve Lorenz System.
+        </p>
+<p>
+          The shape of the graphical path looks like a bufferfly, so it is also well-known
+          as "bufferfly effect".
+        </p>
+<p>
+          <span class="bold"><strong>ODE</strong></span> :
+        </p>
+<pre class="programlisting">dx/dt := Sigma * (y - x)
+dy/dt := Ro * x - y - x * z
+dz/dt := x * y - Beta * z
+</pre>
+<p>
+          Read first: <a class="link" href="cpp-boost-odeint-ode.html" title="c++ boost odeint ODE">c++ boost odeint ODE</a>
+        </p>
+<h2>
+<a name="cpp-lorenz-system.h0"></a>
+          <span class="phrase"><a name="cpp-lorenz-system.cpp-example"></a></span><a class="link" href="cpp-lorenz-system.html#cpp-lorenz-system.cpp-example"><span class="cyan">c++ example</span></a>
+        </h2>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">/</span><span class="identifier">odeint</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">functional</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsb</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_1</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_2</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_3</span><span class="special">;</span>
+
+	<span class="keyword">using</span> <span class="identifier">dfloat</span> <span class="special">=</span> <span class="keyword">float</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">state_type</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">&gt;;</span>
+<span class="special">}</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsb</span>
+<span class="special">{</span>
+	<span class="keyword">class</span> <span class="identifier">equation</span>
+	<span class="special">{</span>
+	<span class="keyword">private</span><span class="special">:</span>
+		<span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">S</span> <span class="special">=</span> <span class="number">10</span><span class="special">;</span>	<span class="comment">// sigma</span>
+		<span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">R</span> <span class="special">=</span> <span class="number">28</span><span class="special">;</span>	<span class="comment">// ro</span>
+		<span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">B</span> <span class="special">=</span> <span class="number">8.0</span><span class="special">/</span><span class="number">3.0</span><span class="special">;</span>	<span class="comment">// beta</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">void</span> <span class="identifier">system</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">dxdt</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="keyword">auto</span> <span class="identifier">x0</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">];</span> <span class="keyword">auto</span> <span class="identifier">x1</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">];</span> <span class="keyword">auto</span> <span class="identifier">x2</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+			<span class="keyword">auto</span> <span class="special">&amp;</span> <span class="identifier">dx0dt</span> <span class="special">=</span> <span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">];</span> <span class="keyword">auto</span> <span class="special">&amp;</span> <span class="identifier">dx1dt</span> <span class="special">=</span> <span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">];</span> <span class="keyword">auto</span> <span class="special">&amp;</span> <span class="identifier">dx2dt</span> <span class="special">=</span> <span class="identifier">dxdt</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+			<span class="identifier">dx0dt</span> <span class="special">=</span> <span class="identifier">S</span> <span class="special">*</span> <span class="special">(</span><span class="identifier">x1</span> <span class="special">-</span> <span class="identifier">x0</span><span class="special">);</span>
+			<span class="identifier">dx1dt</span> <span class="special">=</span> <span class="identifier">R</span> <span class="special">*</span> <span class="identifier">x0</span> <span class="special">-</span> <span class="identifier">x1</span> <span class="special">-</span> <span class="identifier">x0</span> <span class="special">*</span> <span class="identifier">x2</span><span class="special">;</span>
+			<span class="identifier">dx2dt</span> <span class="special">=</span> <span class="identifier">x0</span> <span class="special">*</span> <span class="identifier">x1</span> <span class="special">-</span> <span class="identifier">B</span> <span class="special">*</span> <span class="identifier">x2</span><span class="special">;</span>
+		<span class="special">}</span>
+		<span class="keyword">void</span> <span class="identifier">observer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span> <span class="special">&lt;&lt;</span> <span class="string">"\t\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"\t"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+		<span class="special">}</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">state_type</span> <span class="identifier">init</span><span class="special">{</span><span class="number">0.3</span><span class="special">,</span> <span class="number">0.1</span><span class="special">,</span> <span class="number">0.5</span><span class="special">};</span>
+			<span class="identifier">odeint</span><span class="special">::</span><span class="identifier">integrate_const</span><span class="special">(</span>
+				<span class="identifier">odeint</span><span class="special">::</span><span class="identifier">runge_kutta4</span><span class="special">&lt;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span><span class="special">&gt;{},</span>
+				<span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+					<span class="special">&amp;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span><span class="special">::</span><span class="identifier">system</span><span class="special">,</span>
+					<span class="keyword">this</span><span class="special">,</span>
+					<span class="identifier">_1</span><span class="special">,</span>
+					<span class="identifier">_2</span><span class="special">,</span>
+					<span class="identifier">_3</span>
+				<span class="special">),</span>
+				<span class="identifier">init</span><span class="special">,</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">0</span><span class="special">},</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">25</span><span class="special">},</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">0.1</span><span class="special">},</span>
+				<span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+					<span class="special">&amp;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span><span class="special">::</span><span class="identifier">observer</span><span class="special">,</span>
+					<span class="keyword">this</span><span class="special">,</span>
+					<span class="identifier">_1</span><span class="special">,</span>
+					<span class="identifier">_2</span>
+				<span class="special">)</span>
+			<span class="special">);</span>
+		<span class="special">}</span>
+	<span class="special">};</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span> <span class="identifier">eqt</span><span class="special">;</span>
+	<span class="identifier">eqt</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<h2>
+<a name="cpp-lorenz-system.h1"></a>
+          <span class="phrase"><a name="cpp-lorenz-system.date"></a></span><a class="link" href="cpp-lorenz-system.html#cpp-lorenz-system.date"><span class="cyan">Date</span></a>
+        </h2>
+<p>
+          Sat Jun 7 06:03:31 AM UTC 2025
+        </p>
+<h2>
+<a name="cpp-lorenz-system.h2"></a>
+          <span class="phrase"><a name="cpp-lorenz-system.back"></a></span><a class="link" href="cpp-lorenz-system.html#cpp-lorenz-system.back"><span class="cyan">Back</span></a>
+        </h2>
+<p>
+          <a class="link" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">Up</a>
+        </p>
+<h2>
+<a name="cpp-lorenz-system.h3"></a>
+          <span class="phrase"><a name="cpp-lorenz-system.cheers-cpp"></a></span><a class="link" href="cpp-lorenz-system.html#cpp-lorenz-system.cheers-cpp"><span class="cyan">Web</span></a>
+        </h2>
+<p>
+          <a href="." target="_top">Home</a>
+        </p>
+</div>
+<div class="copyright-footer"><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p></div>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-boost-odeint-ode.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-odeint.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="boost-signals2.html"><img src="images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+echo "Build mapday ..." ;
+
+path-constant mapday-prj-dir : . ;
+path-constant qbk-media-path : ./src/qbk-media ;
+path-constant html-install-path : ./docs ;
+
+argv = [ modules.peek : ARGV ] ;
+
+if [ MATCH ^(cleanall)$ : $(argv) ]
+{
+	cmd = "rm -rf `find $(mapday-prj-dir) -name bin` `find $(mapday-prj-dir) -name html`" ;
+	echo $(cmd) ;
+	SHELL $(cmd) ;
+
+	cmd = "rm -rf $(mapday-prj-dir)/docs/*.html $(mapday-prj-dir)/docs/*.css" ;
+	echo $(cmd) ;
+	SHELL $(cmd) ;
+
+	cmd = "rm -rf $(mapday-prj-dir)/docs/*.manifest $(mapday-prj-dir)/docs/images" ;
+	echo $(cmd) ;
+	SHELL $(cmd) ;
+
+	exit ;
+}
+
+if [ MATCH ^(clean)$ : $(argv) ]
+{
+	cmd = "rm -rf `find $(mapday-prj-dir) -name bin` `find $(mapday-prj-dir) -name html`" ;
+	echo $(cmd) ;
+	SHELL $(cmd) ;
+
+	exit ;
+}
+
+build-project src ;

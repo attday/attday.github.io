@@ -1,0 +1,14 @@
+[article c++ Day
+	[id cppday]
+	[quickbook 1.7]
+]
+
+[include boost-lex/boost-lex.qbk]
+[include boost-odeint/boost-odeint.qbk]
+[include boost-signals2/boost-signals2.qbk]
+
+[h1:back [role cyan Back]]
+
+[@. Up]
+
+[include ../share/foot.inc.qbk]

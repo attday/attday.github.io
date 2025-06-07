@@ -1,0 +1,170 @@
+[article A word counter, boost lex c++ lexer
+	[id word-counter-boost-lex]
+	[quickbook 1.7]
+]
+
+Different tokens can be bound with different IDs in the lexer, and the token IDs can be accessed in the call back function.
+
+[*Token IDs]
+
+IDs are just a list of c++ int or enums.
+
+```
+enum token_id
+{
+	id_word,
+	id_eol,
+	id_empty
+};
+```
+
+[*Bind Token IDs]
+
+Bind ids to token regular expression.
+
+```
+this->self.add(pat1, id_word)(pat2, id_eol)(pat3, id_empty);
+```
+
+Be careful, do not let the token ID be zero.
+
+[*Access IDs]
+
+Token ID can be accessed by method token.id().
+
+```
+switch (token.id())
+{
+case id_world:
+	break;
+...
+}
+```
+
+Please reade bone frame first: [link cpp-lexer-bone-frame c++ lexer boost lex minimized bone frame] .
+
+[h1:cpp-example [role cyan c++ example]]
+
+[!c++]
+```
+#include <boost/spirit/include/lex_lexertl.hpp>
+#include <functional>
+#include <iostream>
+#include <string>
+
+namespace lex = boost::spirit::lex;
+
+namespace nsa
+{
+	enum token_id
+	{
+		id_word = 100,
+		id_eol = 101,
+		id_other = 102
+	};
+
+	using std::placeholders::_1;
+	using std::placeholders::_2;
+	using std::placeholders::_3;
+}
+
+namespace nsa
+{
+	template <typename lexer_t00>
+	class my_lexer: virtual public lex::lexer<lexer_t00>
+	{
+	public:
+		my_lexer()
+		{
+			this->self.add
+				("[a-zA-Z_\\-\\+]+", nsa::id_word)
+				("\n", nsa::id_eol)
+				(".", nsa::id_other)
+			;
+		}
+	};
+
+	class my_counter
+	{
+	private:
+		int words{0};
+		int eol{0};
+		int other{0};
+		int unknown{0};
+		friend class my_fn;
+	public:
+		void report() const
+		{
+			std::cout
+				<< "words: " << words << '\n'
+				<< "eol: " << eol << '\n'
+				<< "other: " << other << '\n'
+				<< "unknown: " << unknown << '\n'
+			;
+		}
+	};
+
+	class my_fn
+	{
+	public:
+		template <typename token_t10>
+		bool operator()(const token_t10 & token, nsa::my_counter & counter) const
+		{
+			switch (token.id())
+			{
+			case nsa::id_word:
+				++counter.words;
+				break;
+			case nsa::id_eol:
+				++counter.eol;
+				break;
+			case nsa::id_other:
+				++counter.other;
+				break;
+			default:
+				++counter.unknown;
+				break;
+			}
+			return true;
+		}
+	};
+}
+
+int main()
+{
+	std::string str = R"(
+		Hello, c++!
+		Cheers, c++!
+		c++-world.
+	)";
+	const char * first = &*str.begin();
+	const char * last = &*str.end();
+	nsa::my_lexer<lex::lexertl::lexer<>> lexer;
+	nsa::my_counter counter;
+	nsa::my_fn fn;
+	bool r = lex::tokenize(
+		first,
+		last,
+		lexer,
+		std::bind(
+			fn,
+			nsa::_1,
+			std::ref(counter)
+		)
+	);
+	if (r)
+		counter.report();
+	else
+		std::cout << "Parse Error\n";
+}
+```
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 03:19:55 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-lex Up]
+
+[include ../../share/foot.inc.qbk]

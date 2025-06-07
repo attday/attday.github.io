@@ -1,0 +1,42 @@
+echo "Build mapday/src/qbk ..." ;
+
+path-constant html-cache-path : ./html ;
+
+xml xml-index : mapday.qbk ;
+
+boostbook
+	html-index
+:
+	xml-index
+:
+	<xsl:param>"chunk.first.sections=1"
+	<xsl:param>"chunker.output.doctype-public=-//W3C//DTD XHTML 1.0 Strict//EN"
+	<xsl:param>"chunker.output.doctype-system=http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+	<dependency>install-qbk-media
+;
+
+install
+	install-qbk-media
+:
+	[
+		glob
+			$(qbk-media-path)/*.css
+			$(qbk-media-path)/images/*.png
+	]
+:
+	<location>$(html-install-path)
+	<install-source-root>$(qbk-media-path)
+;
+
+install
+	install-html
+:
+	[
+		glob
+			$(html-cache-path)/*.html
+			$(html-cache-path)/*.manifest
+	]
+:
+	<location>$(html-install-path)
+	<install-source-root>$(html-cache-path)
+;

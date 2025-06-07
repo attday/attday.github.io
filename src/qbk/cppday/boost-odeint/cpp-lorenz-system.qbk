@@ -1,0 +1,107 @@
+[article c++ Lorenz System (Attractor), boost odeint
+	[id cpp-lorenz-system]
+	[quickbook 1.7]
+]
+
+Lorenz System (Attractor) is a system of Ordinary Differential Equations, that a group of special parameters are applied to.
+
+odeint is a boost c++ library that can solve Lorenz System.
+
+The shape of the graphical path looks like a bufferfly, so it is also well-known as "bufferfly effect".
+
+[*ODE] :
+
+[pre
+dx/dt := Sigma * (y - x)
+dy/dt := Ro * x - y - x * z
+dz/dt := x * y - Beta * z
+]
+
+Read first: [link cpp-boost-odeint-ode c++ boost odeint ODE]
+
+[h1:cpp-example [role cyan c++ example]]
+
+[!c++]
+```
+#include <boost/numeric/odeint.hpp>
+#include <functional>
+#include <iostream>
+#include <vector>
+
+namespace odeint = boost::numeric::odeint;
+
+namespace nsb
+{
+	using std::placeholders::_1;
+	using std::placeholders::_2;
+	using std::placeholders::_3;
+
+	using dfloat = float;
+	using state_type = std::vector<nsb::dfloat>;
+}
+
+namespace nsb
+{
+	class equation
+	{
+	private:
+		const nsb::dfloat S = 10;	// sigma
+		const nsb::dfloat R = 28;	// ro
+		const nsb::dfloat B = 8.0/3.0;	// beta
+	public:
+		void system(const nsb::state_type & x, nsb::state_type & dxdt, const nsb::dfloat t) const
+		{
+			auto x0 = x[0]; auto x1 = x[1]; auto x2 = x[2];
+			auto & dx0dt = dxdt[0]; auto & dx1dt = dxdt[1]; auto & dx2dt = dxdt[2];
+			dx0dt = S * (x1 - x0);
+			dx1dt = R * x0 - x1 - x0 * x2;
+			dx2dt = x0 * x1 - B * x2;
+		}
+		void observer(const nsb::state_type & x, const nsb::dfloat t) const
+		{
+			std::cout << t << "\t\t" << x[0] << "\t" << x[1] << "\t" << std::endl;
+		}
+	public:
+		void run() const
+		{
+			state_type init{0.3, 0.1, 0.5};
+			odeint::integrate_const(
+				odeint::runge_kutta4<nsb::state_type>{},
+				std::bind(
+					&nsb::equation::system,
+					this,
+					_1,
+					_2,
+					_3
+				),
+				init,
+				nsb::dfloat{0},
+				nsb::dfloat{25},
+				nsb::dfloat{0.1},
+				std::bind(
+					&nsb::equation::observer,
+					this,
+					_1,
+					_2
+				)
+			);
+		}
+	};
+}
+
+int main()
+{
+	nsb::equation eqt;
+	eqt.run();
+}
+```
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 06:03:31 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-odeint Up]
+
+[include ../../share/foot.inc.qbk]

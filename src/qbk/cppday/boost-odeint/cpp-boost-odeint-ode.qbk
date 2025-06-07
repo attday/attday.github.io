@@ -1,0 +1,127 @@
+[article c++ boost odeint ODE
+	[id cpp-boost-odeint-ode]
+	[quickbook 1.7]
+]
+
+[*Namespace]
+
+Make a shorter namespace alias.
+
+```
+namespace odeint = boost::numeric::odeint;
+```
+
+[*Integrate]
+
+The process of running differential equations.
+
+```
+odeint::integrate_const(stepper, math_system, init_state, t0, t1, dt, observer);
+```
+
+[*Steppers]
+
+Runge-Kutta 4 (rk4) is the most accurate and fast stepper.
+
+```
+odeint::runge_kutta4<state_type> rk4;
+```
+
+[*System of Equations]
+
+The mathematical system of equations.
+
+```
+void sytem(x, dxdt, t0;
+```
+
+[*Observer]
+
+Observer is called at each time step.
+
+```
+void observer(x, t);
+```
+
+[h1:cpp-example [role cyan c++ example]]
+
+[!c++]
+```
+#include <boost/numeric/odeint.hpp>
+#include <functional>
+#include <vector>
+#include <iostream>
+
+namespace odeint = boost::numeric::odeint;
+
+namespace nsb
+{
+	using std::placeholders::_1;
+	using std::placeholders::_2;
+	using std::placeholders::_3;
+	using std::placeholders::_4;
+	using std::placeholders::_5;
+}
+
+namespace nsb
+{
+	using dfloat = float;
+	using state_type = std::vector<dfloat>;
+
+	class equation
+	{
+	public:
+		void system(const nsb::state_type & x, nsb::state_type & dxdt, const nsb::dfloat time) const
+		{
+			dxdt[0] = x[0] - x[1] + x[2];
+			dxdt[1] = 2*x[0] + x[1] - 2*x[2];
+			dxdt[2] = -x[0] + 3*x[1] - x[2];
+		}
+		void observer(const nsb::state_type & x, const dfloat time) const
+		{
+			std::cout << time << "	=>	" << x[0] << "	" << x[1] << "	" << x[2] << std::endl;
+		}
+	public:
+		void run() const
+		{
+			nsb::state_type init{0.1, 0.7, 0.9};
+			odeint::integrate_const(
+				odeint::runge_kutta4<nsb::state_type>{},
+				std::bind(
+					&nsb::equation::system,
+					this,
+					_1,
+					_2,
+					_3
+				),
+				init,
+				nsb::dfloat{0},
+				nsb::dfloat{25},
+				nsb::dfloat{0.1},
+				std::bind(
+					&nsb::equation::observer,
+					this,
+					_1,
+					_2
+				)
+			);
+		}
+	};
+}
+
+int main()
+{
+	nsb::equation eqt;
+	eqt.run();
+}
+```
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 05:22:11 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-odeint Up]
+
+[include ../../share/foot.inc.qbk]

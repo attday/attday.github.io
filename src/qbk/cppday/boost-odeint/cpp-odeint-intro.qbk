@@ -1,0 +1,28 @@
+[article boost odeint: c++ Differential Equation, introduce
+	[id cpp-odeint-intro]
+	[quickbook 1.7]
+]
+
+boost odeint is an ordinary differential equation c++ library. c++ odeint: Ordinary Differential Equation, Integral.
+
+Domain: Mathematics.
+
+odeint is a c++ boost library for sovling initial value problems (ivp) of ode.
+
+[pre
+x'(t) := f(x, t)	x(0) := x0
+]
+
+where x'(t) := f(x, t) is a system of ordinary differential equations.
+
+[@https://www.boost.org/doc/libs/latest/libs/numeric/odeint/doc/html/index.html]
+
+[h1:date [role cyan Date]]
+
+Sat Jun  7 04:51:08 AM UTC 2025
+
+[h1:back [role cyan Back]]
+
+[link boost-odeint Up]
+
+[include ../../share/foot.inc.qbk]

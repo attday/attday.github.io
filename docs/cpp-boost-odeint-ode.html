@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>c++ boost odeint ODE</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
+<link rel="home" href="index.html" title="c++ Programming Day, Mapday">
+<link rel="up" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">
+<link rel="prev" href="cpp-odeint-intro.html" title="boost odeint: c++ Differential Equation, introduce">
+<link rel="next" href="cpp-lorenz-system.html" title="c++ Lorenz System (Attractor), boost odeint">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-odeint-intro.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-odeint.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="cpp-lorenz-system.html"><img src="images/next.png" alt="Next"></a>
+</div>
+<div class="article">
+<div class="titlepage">
+<div><div><h2 class="title">
+<a name="cpp-boost-odeint-ode"></a>c++ boost odeint ODE</h2></div></div>
+<hr>
+</div>
+<p>
+          <span class="bold"><strong>Namespace</strong></span>
+        </p>
+<p>
+          Make a shorter namespace alias.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">;</span>
+</pre>
+<p>
+          <span class="bold"><strong>Integrate</strong></span>
+        </p>
+<p>
+          The process of running differential equations.
+        </p>
+<pre class="programlisting"><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">integrate_const</span><span class="special">(</span><span class="identifier">stepper</span><span class="special">,</span> <span class="identifier">math_system</span><span class="special">,</span> <span class="identifier">init_state</span><span class="special">,</span> <span class="identifier">t0</span><span class="special">,</span> <span class="identifier">t1</span><span class="special">,</span> <span class="identifier">dt</span><span class="special">,</span> <span class="identifier">observer</span><span class="special">);</span>
+</pre>
+<p>
+          <span class="bold"><strong>Steppers</strong></span>
+        </p>
+<p>
+          Runge-Kutta 4 (rk4) is the most accurate and fast stepper.
+        </p>
+<pre class="programlisting"><span class="identifier">odeint</span><span class="special">::</span><span class="identifier">runge_kutta4</span><span class="special">&lt;</span><span class="identifier">state_type</span><span class="special">&gt;</span> <span class="identifier">rk4</span><span class="special">;</span>
+</pre>
+<p>
+          <span class="bold"><strong>System of Equations</strong></span>
+        </p>
+<p>
+          The mathematical system of equations.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">sytem</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">dxdt</span><span class="special">,</span> <span class="identifier">t0</span><span class="special">;</span>
+</pre>
+<p>
+          <span class="bold"><strong>Observer</strong></span>
+        </p>
+<p>
+          Observer is called at each time step.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">observer</span><span class="special">(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+</pre>
+<h2>
+<a name="cpp-boost-odeint-ode.h0"></a>
+          <span class="phrase"><a name="cpp-boost-odeint-ode.cpp-example"></a></span><a class="link" href="cpp-boost-odeint-ode.html#cpp-boost-odeint-ode.cpp-example"><span class="cyan">c++ example</span></a>
+        </h2>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">numeric</span><span class="special">/</span><span class="identifier">odeint</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">functional</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">odeint</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">numeric</span><span class="special">::</span><span class="identifier">odeint</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsb</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_1</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_2</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_3</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_4</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_5</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsb</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="identifier">dfloat</span> <span class="special">=</span> <span class="keyword">float</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">state_type</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">dfloat</span><span class="special">&gt;;</span>
+
+	<span class="keyword">class</span> <span class="identifier">equation</span>
+	<span class="special">{</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">void</span> <span class="identifier">system</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">dxdt</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span> <span class="identifier">time</span><span class="special">)</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">dxdt</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+			<span class="identifier">dxdt</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="number">2</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+			<span class="identifier">dxdt</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">=</span> <span class="special">-</span><span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">+</span> <span class="number">3</span><span class="special">*</span><span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">-</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">];</span>
+		<span class="special">}</span>
+		<span class="keyword">void</span> <span class="identifier">observer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">dfloat</span> <span class="identifier">time</span><span class="special">)</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">time</span> <span class="special">&lt;&lt;</span> <span class="string">"	=&gt;	"</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"	"</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"	"</span> <span class="special">&lt;&lt;</span> <span class="identifier">x</span><span class="special">[</span><span class="number">2</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+		<span class="special">}</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">void</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span> <span class="identifier">init</span><span class="special">{</span><span class="number">0.1</span><span class="special">,</span> <span class="number">0.7</span><span class="special">,</span> <span class="number">0.9</span><span class="special">};</span>
+			<span class="identifier">odeint</span><span class="special">::</span><span class="identifier">integrate_const</span><span class="special">(</span>
+				<span class="identifier">odeint</span><span class="special">::</span><span class="identifier">runge_kutta4</span><span class="special">&lt;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">state_type</span><span class="special">&gt;{},</span>
+				<span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+					<span class="special">&amp;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span><span class="special">::</span><span class="identifier">system</span><span class="special">,</span>
+					<span class="keyword">this</span><span class="special">,</span>
+					<span class="identifier">_1</span><span class="special">,</span>
+					<span class="identifier">_2</span><span class="special">,</span>
+					<span class="identifier">_3</span>
+				<span class="special">),</span>
+				<span class="identifier">init</span><span class="special">,</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">0</span><span class="special">},</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">25</span><span class="special">},</span>
+				<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">dfloat</span><span class="special">{</span><span class="number">0.1</span><span class="special">},</span>
+				<span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+					<span class="special">&amp;</span><span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span><span class="special">::</span><span class="identifier">observer</span><span class="special">,</span>
+					<span class="keyword">this</span><span class="special">,</span>
+					<span class="identifier">_1</span><span class="special">,</span>
+					<span class="identifier">_2</span>
+				<span class="special">)</span>
+			<span class="special">);</span>
+		<span class="special">}</span>
+	<span class="special">};</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">nsb</span><span class="special">::</span><span class="identifier">equation</span> <span class="identifier">eqt</span><span class="special">;</span>
+	<span class="identifier">eqt</span><span class="special">.</span><span class="identifier">run</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<h2>
+<a name="cpp-boost-odeint-ode.h1"></a>
+          <span class="phrase"><a name="cpp-boost-odeint-ode.date"></a></span><a class="link" href="cpp-boost-odeint-ode.html#cpp-boost-odeint-ode.date"><span class="cyan">Date</span></a>
+        </h2>
+<p>
+          Sat Jun 7 05:22:11 AM UTC 2025
+        </p>
+<h2>
+<a name="cpp-boost-odeint-ode.h2"></a>
+          <span class="phrase"><a name="cpp-boost-odeint-ode.back"></a></span><a class="link" href="cpp-boost-odeint-ode.html#cpp-boost-odeint-ode.back"><span class="cyan">Back</span></a>
+        </h2>
+<p>
+          <a class="link" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">Up</a>
+        </p>
+<h2>
+<a name="cpp-boost-odeint-ode.h3"></a>
+          <span class="phrase"><a name="cpp-boost-odeint-ode.cheers-cpp"></a></span><a class="link" href="cpp-boost-odeint-ode.html#cpp-boost-odeint-ode.cheers-cpp"><span class="cyan">Web</span></a>
+        </h2>
+<p>
+          <a href="." target="_top">Home</a>
+        </p>
+</div>
+<div class="copyright-footer"><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p></div>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-odeint-intro.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-odeint.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="cpp-lorenz-system.html"><img src="images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

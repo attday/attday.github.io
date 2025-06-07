@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>A word counter, boost lex c++ lexer</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
+<link rel="home" href="index.html" title="c++ Programming Day, Mapday">
+<link rel="up" href="boost-lex.html" title="boost lex, c++ lexer">
+<link rel="prev" href="cpp-lexer-bone-frame.html" title="c++ lexer boost lex minimized bone frame">
+<link rel="next" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-lexer-bone-frame.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-lex.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="boost-odeint.html"><img src="images/next.png" alt="Next"></a>
+</div>
+<div class="article">
+<div class="titlepage">
+<div><div><h2 class="title">
+<a name="word-counter-boost-lex"></a>A word counter, boost lex c++ lexer</h2></div></div>
+<hr>
+</div>
+<p>
+          Different tokens can be bound with different IDs in the lexer, and the
+          token IDs can be accessed in the call back function.
+        </p>
+<p>
+          <span class="bold"><strong>Token IDs</strong></span>
+        </p>
+<p>
+          IDs are just a list of c++ int or enums.
+        </p>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">token_id</span>
+<span class="special">{</span>
+	<span class="identifier">id_word</span><span class="special">,</span>
+	<span class="identifier">id_eol</span><span class="special">,</span>
+	<span class="identifier">id_empty</span>
+<span class="special">};</span>
+</pre>
+<p>
+          <span class="bold"><strong>Bind Token IDs</strong></span>
+        </p>
+<p>
+          Bind ids to token regular expression.
+        </p>
+<pre class="programlisting"><span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">self</span><span class="special">.</span><span class="identifier">add</span><span class="special">(</span><span class="identifier">pat1</span><span class="special">,</span> <span class="identifier">id_word</span><span class="special">)(</span><span class="identifier">pat2</span><span class="special">,</span> <span class="identifier">id_eol</span><span class="special">)(</span><span class="identifier">pat3</span><span class="special">,</span> <span class="identifier">id_empty</span><span class="special">);</span>
+</pre>
+<p>
+          Be careful, do not let the token ID be zero.
+        </p>
+<p>
+          <span class="bold"><strong>Access IDs</strong></span>
+        </p>
+<p>
+          Token ID can be accessed by method token.id().
+        </p>
+<pre class="programlisting"><span class="keyword">switch</span> <span class="special">(</span><span class="identifier">token</span><span class="special">.</span><span class="identifier">id</span><span class="special">())</span>
+<span class="special">{</span>
+<span class="keyword">case</span> <span class="identifier">id_world</span><span class="special">:</span>
+	<span class="keyword">break</span><span class="special">;</span>
+<span class="special">...</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Please reade bone frame first: <a class="link" href="cpp-lexer-bone-frame.html" title="c++ lexer boost lex minimized bone frame">c++
+          lexer boost lex minimized bone frame</a> .
+        </p>
+<h2>
+<a name="word-counter-boost-lex.h0"></a>
+          <span class="phrase"><a name="word-counter-boost-lex.cpp-example"></a></span><a class="link" href="word-counter-boost-lex.html#word-counter-boost-lex.cpp-example"><span class="cyan">c++ example</span></a>
+        </h2>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">spirit</span><span class="special">/</span><span class="identifier">include</span><span class="special">/</span><span class="identifier">lex_lexertl</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">functional</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">lex</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">spirit</span><span class="special">::</span><span class="identifier">lex</span><span class="special">;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsa</span>
+<span class="special">{</span>
+	<span class="keyword">enum</span> <span class="identifier">token_id</span>
+	<span class="special">{</span>
+		<span class="identifier">id_word</span> <span class="special">=</span> <span class="number">100</span><span class="special">,</span>
+		<span class="identifier">id_eol</span> <span class="special">=</span> <span class="number">101</span><span class="special">,</span>
+		<span class="identifier">id_other</span> <span class="special">=</span> <span class="number">102</span>
+	<span class="special">};</span>
+
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_1</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_2</span><span class="special">;</span>
+	<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">placeholders</span><span class="special">::</span><span class="identifier">_3</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">namespace</span> <span class="identifier">nsa</span>
+<span class="special">{</span>
+	<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">lexer_t00</span><span class="special">&gt;</span>
+	<span class="keyword">class</span> <span class="identifier">my_lexer</span><span class="special">:</span> <span class="keyword">virtual</span> <span class="keyword">public</span> <span class="identifier">lex</span><span class="special">::</span><span class="identifier">lexer</span><span class="special">&lt;</span><span class="identifier">lexer_t00</span><span class="special">&gt;</span>
+	<span class="special">{</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="identifier">my_lexer</span><span class="special">()</span>
+		<span class="special">{</span>
+			<span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">self</span><span class="special">.</span><span class="identifier">add</span>
+				<span class="special">(</span><span class="string">"[a-zA-Z_\\-\\+]+"</span><span class="special">,</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_word</span><span class="special">)</span>
+				<span class="special">(</span><span class="string">"\n"</span><span class="special">,</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_eol</span><span class="special">)</span>
+				<span class="special">(</span><span class="string">"."</span><span class="special">,</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_other</span><span class="special">)</span>
+			<span class="special">;</span>
+		<span class="special">}</span>
+	<span class="special">};</span>
+
+	<span class="keyword">class</span> <span class="identifier">my_counter</span>
+	<span class="special">{</span>
+	<span class="keyword">private</span><span class="special">:</span>
+		<span class="keyword">int</span> <span class="identifier">words</span><span class="special">{</span><span class="number">0</span><span class="special">};</span>
+		<span class="keyword">int</span> <span class="identifier">eol</span><span class="special">{</span><span class="number">0</span><span class="special">};</span>
+		<span class="keyword">int</span> <span class="identifier">other</span><span class="special">{</span><span class="number">0</span><span class="special">};</span>
+		<span class="keyword">int</span> <span class="identifier">unknown</span><span class="special">{</span><span class="number">0</span><span class="special">};</span>
+		<span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">my_fn</span><span class="special">;</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">void</span> <span class="identifier">report</span><span class="special">()</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span>
+				<span class="special">&lt;&lt;</span> <span class="string">"words: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">words</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span>
+				<span class="special">&lt;&lt;</span> <span class="string">"eol: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">eol</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span>
+				<span class="special">&lt;&lt;</span> <span class="string">"other: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">other</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span>
+				<span class="special">&lt;&lt;</span> <span class="string">"unknown: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">unknown</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span>
+			<span class="special">;</span>
+		<span class="special">}</span>
+	<span class="special">};</span>
+
+	<span class="keyword">class</span> <span class="identifier">my_fn</span>
+	<span class="special">{</span>
+	<span class="keyword">public</span><span class="special">:</span>
+		<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">token_t10</span><span class="special">&gt;</span>
+		<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">token_t10</span> <span class="special">&amp;</span> <span class="identifier">token</span><span class="special">,</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">my_counter</span> <span class="special">&amp;</span> <span class="identifier">counter</span><span class="special">)</span> <span class="keyword">const</span>
+		<span class="special">{</span>
+			<span class="keyword">switch</span> <span class="special">(</span><span class="identifier">token</span><span class="special">.</span><span class="identifier">id</span><span class="special">())</span>
+			<span class="special">{</span>
+			<span class="keyword">case</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_word</span><span class="special">:</span>
+				<span class="special">++</span><span class="identifier">counter</span><span class="special">.</span><span class="identifier">words</span><span class="special">;</span>
+				<span class="keyword">break</span><span class="special">;</span>
+			<span class="keyword">case</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_eol</span><span class="special">:</span>
+				<span class="special">++</span><span class="identifier">counter</span><span class="special">.</span><span class="identifier">eol</span><span class="special">;</span>
+				<span class="keyword">break</span><span class="special">;</span>
+			<span class="keyword">case</span> <span class="identifier">nsa</span><span class="special">::</span><span class="identifier">id_other</span><span class="special">:</span>
+				<span class="special">++</span><span class="identifier">counter</span><span class="special">.</span><span class="identifier">other</span><span class="special">;</span>
+				<span class="keyword">break</span><span class="special">;</span>
+			<span class="keyword">default</span><span class="special">:</span>
+				<span class="special">++</span><span class="identifier">counter</span><span class="special">.</span><span class="identifier">unknown</span><span class="special">;</span>
+				<span class="keyword">break</span><span class="special">;</span>
+			<span class="special">}</span>
+			<span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+		<span class="special">}</span>
+	<span class="special">};</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str</span> <span class="special">=</span> <span class="identifier">R</span><span class="string">"(
+		Hello, c++!
+		Cheers, c++!
+		c++-world.
+	)"</span><span class="special">;</span>
+	<span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">first</span> <span class="special">=</span> <span class="special">&amp;*</span><span class="identifier">str</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+	<span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">last</span> <span class="special">=</span> <span class="special">&amp;*</span><span class="identifier">str</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+	<span class="identifier">nsa</span><span class="special">::</span><span class="identifier">my_lexer</span><span class="special">&lt;</span><span class="identifier">lex</span><span class="special">::</span><span class="identifier">lexertl</span><span class="special">::</span><span class="identifier">lexer</span><span class="special">&lt;&gt;&gt;</span> <span class="identifier">lexer</span><span class="special">;</span>
+	<span class="identifier">nsa</span><span class="special">::</span><span class="identifier">my_counter</span> <span class="identifier">counter</span><span class="special">;</span>
+	<span class="identifier">nsa</span><span class="special">::</span><span class="identifier">my_fn</span> <span class="identifier">fn</span><span class="special">;</span>
+	<span class="keyword">bool</span> <span class="identifier">r</span> <span class="special">=</span> <span class="identifier">lex</span><span class="special">::</span><span class="identifier">tokenize</span><span class="special">(</span>
+		<span class="identifier">first</span><span class="special">,</span>
+		<span class="identifier">last</span><span class="special">,</span>
+		<span class="identifier">lexer</span><span class="special">,</span>
+		<span class="identifier">std</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+			<span class="identifier">fn</span><span class="special">,</span>
+			<span class="identifier">nsa</span><span class="special">::</span><span class="identifier">_1</span><span class="special">,</span>
+			<span class="identifier">std</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">counter</span><span class="special">)</span>
+		<span class="special">)</span>
+	<span class="special">);</span>
+	<span class="keyword">if</span> <span class="special">(</span><span class="identifier">r</span><span class="special">)</span>
+		<span class="identifier">counter</span><span class="special">.</span><span class="identifier">report</span><span class="special">();</span>
+	<span class="keyword">else</span>
+		<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Parse Error\n"</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<h2>
+<a name="word-counter-boost-lex.h1"></a>
+          <span class="phrase"><a name="word-counter-boost-lex.date"></a></span><a class="link" href="word-counter-boost-lex.html#word-counter-boost-lex.date"><span class="cyan">Date</span></a>
+        </h2>
+<p>
+          Sat Jun 7 03:19:55 AM UTC 2025
+        </p>
+<h2>
+<a name="word-counter-boost-lex.h2"></a>
+          <span class="phrase"><a name="word-counter-boost-lex.back"></a></span><a class="link" href="word-counter-boost-lex.html#word-counter-boost-lex.back"><span class="cyan">Back</span></a>
+        </h2>
+<p>
+          <a class="link" href="boost-lex.html" title="boost lex, c++ lexer">Up</a>
+        </p>
+<h2>
+<a name="word-counter-boost-lex.h3"></a>
+          <span class="phrase"><a name="word-counter-boost-lex.cheers-cpp"></a></span><a class="link" href="word-counter-boost-lex.html#word-counter-boost-lex.cheers-cpp"><span class="cyan">Web</span></a>
+        </h2>
+<p>
+          <a href="." target="_top">Home</a>
+        </p>
+</div>
+<div class="copyright-footer"><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p></div>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="cpp-lexer-bone-frame.html"><img src="images/prev.png" alt="Prev"></a><a accesskey="u" href="boost-lex.html"><img src="images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="images/home.png" alt="Home"></a><a accesskey="n" href="boost-odeint.html"><img src="images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

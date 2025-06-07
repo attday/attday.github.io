@@ -1,88 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
 <head>
-<meta charset="utf-8">
-<title>c++ Programming Day</title>
-<style>
-header {text-align: center}
-footer {text-align: center}
-article {width:800px;margin:auto}
-main {margin:0 50px}
-pre {border-left:2pt solid #000;padding-left:10pt}
-</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>c++ Programming Day, Mapday</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
+<link rel="home" href="index.html" title="c++ Programming Day, Mapday">
+<link rel="next" href="cppday.html" title="c++ Day">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-
-<body>
-
-<article>
-
-<header>
-<h1>c++ Programming Day</h1>
-</header>
-
-<main>
-
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div class="spirit-nav"><a accesskey="n" href="cppday.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="book">
+<div class="titlepage">
+<div>
+<div><h1 class="title">
+<a name="mapday"></a>c++ Programming Day, Mapday</h1></div>
+<div><div class="legalnotice">
+<a name="mapday.legal"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl class="toc"><dt><span class="article"><a href="cppday.html">c++ Day</a></span></dt></dl>
+</div>
 <p>
-c++ is the most popular programming language in the world.
-</p>
-
+    c++ is the most popular programming language in the world.
+  </p>
 <p>
-<aside>
-The c++ programming language.
-</aside>
-</p>
+    The c++ programming language.
+  </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
 
-<p>
-<label>
-Label: c++
-</label>
-</p>
-
-<pre>
-<code>
-#include &lt;iostream&gt;
-
-int main()
-{
-	std::cout &lt;&lt; "c++ Day!" &lt;&lt; std::endl;
-}
-</code>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">str</span> <span class="special">=</span> <span class="string">"Hello, c++!"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">str</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
-
-<div style="margin:auto;width:330px">
-<svg width="320px" height="240">
-<circle r="100" cx="160" cy="120" fill="#3a7" />
-</svg>
-</div>
-
-<div style="margin:auto;width:330px">
-<canvas id="canvas01" width="320px" height="200" style="border:2px solid #ddd">
-</canvas>
-
-<script>
-var cvs = document.getElementById("canvas01");
-var ctx = cvs.getContext("2d");
-ctx.beginPath();
-ctx.arc(160, 100, 90, 0, 2*Math.PI);
-ctx.fillStyle = "#7a3";
-ctx.strokeStyle = "#7a3";
-ctx.fill();
-ctx.stroke();
-</script>
-
-</div>
-
-</main>
-
-<hr />
-
-<footer>
 <p>
-<strong>c++ Programming Day</strong>
-</p>
-</footer>
-
-</article>
+    <a class="link" href="cpp-lexer-bone-frame.html" title="c++ lexer boost lex minimized bone frame">c++ lexer boost lex minimized bone frame</a>
+    <br> <a class="link" href="word-counter-boost-lex.html" title="A word counter, boost lex c++ lexer">A word counter, boost lex c++ lexer</a>
+    <br> <a class="link" href="cpp-lexer-intro.html" title="boost lex: c++ lexical analyzers (c++ lexer), introduce">boost lex: c++ lexical analyzers (c++
+    lexer), introduce</a> <br> <a class="link" href="boost-lex.html" title="boost lex, c++ lexer">boost lex, c++ lexer</a>
+    <br> <a class="link" href="cpp-lorenz-system.html" title="c++ Lorenz System (Attractor), boost odeint">c++ Lorenz System (Attractor), boost
+    odeint</a> <br> <a class="link" href="cpp-boost-odeint-ode.html" title="c++ boost odeint ODE">c++ boost odeint ODE</a>
+    <br> <a class="link" href="cpp-odeint-intro.html" title="boost odeint: c++ Differential Equation, introduce">boost odeint: c++ Differential Equation,
+    introduce</a> <br> <a class="link" href="boost-odeint.html" title="boost odeint, c++ Differential Equation">boost odeint, c++ Differential
+    Equation</a> <br> <a class="link" href="boost-signals2-pattern-cpp.html" title="boost::signals2 pattern, c++">boost::signals2
+    pattern, c++</a> <br> <a class="link" href="cpp-boost-signals2.html" title="c++ boost signals2, introduce">c++ boost signals2,
+    introduce</a> <br> <a class="link" href="boost-signals2.html" title="boost signals2, c++ signal/slot">boost signals2, c++ signal/slot</a>
+    <br>
+  </p>
+<h2>
+<a name="mapday.h0"></a>
+    <span class="phrase"><a name="mapday.cheers-cpp"></a></span><a class="link" href="index.html#mapday.cheers-cpp"><span class="cyan">Web</span></a>
+  </h2>
+<p>
+    <a href="." target="_top">Home</a>
+  </p>
+</div>
+<div class="copyright-footer"></div>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="cppday.html"><img src="images/next.png" alt="Next"></a></div>
 </body>
 </html>

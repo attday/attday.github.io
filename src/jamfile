@@ -1,0 +1,5 @@
+echo "Build mapday/src ..." ;
+
+build-project qbk ;
+
+
