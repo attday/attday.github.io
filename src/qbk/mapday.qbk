@@ -25,19 +25,20 @@ int main()
 }
 ```
 
-[///////////////////////////////////////////////////////////////////////////]
 [link cpp-lexer-bone-frame c++ lexer boost lex minimized bone frame] [br]
 [link word-counter-boost-lex A word counter, boost lex c++ lexer] [br]
 [link cpp-lexer-intro boost lex: c++ lexical analyzers (c++ lexer), introduce] [br]
 [link boost-lex boost lex, c++ lexer] [br]
-[///////////////////////////////////////////////////////////////////////////]
+
 [link cpp-lorenz-system c++ Lorenz System (Attractor), boost odeint] [br]
 [link cpp-boost-odeint-ode c++ boost odeint ODE] [br]
 [link cpp-odeint-intro boost odeint: c++ Differential Equation, introduce] [br]
 [link boost-odeint boost odeint, c++ Differential Equation] [br]
-[///////////////////////////////////////////////////////////////////////////]
+
 [link boost-signals2-pattern-cpp boost::signals2 pattern, c++] [br]
 [link cpp-boost-signals2 c++ boost signals2, introduce] [br]
 [link boost-signals2 boost signals2, c++ signal/slot] [br]
+
+[@https://github.com/attday Github]
 
 [include ./share/foot.inc.qbk]
